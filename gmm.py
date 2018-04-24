@@ -45,15 +45,15 @@ class GMM(object):
       distr += self._pi[m] * mlab.normpdf(x, mu[m], np.sqrt(var[m]))
     return x, distr
 
-  def get_multivariate(self, i, j, intervals, scaling_factor=1, num_samples=100):
+  def get_multivariate(self, i, j, intervals, subintervals, scaling_factor=1, num_samples=100):
     ra_i = (intervals[0][1] - intervals[0][0])/(2.0 * scaling_factor)
     ra_j = (intervals[1][1] - intervals[1][0])/(2.0 * scaling_factor)
     c_i = (intervals[0][0] + intervals[0][1])/2.0
     c_j = (intervals[1][0] + intervals[1][1])/2.0
     mu_i = ra_i * self._mu[:, i] + c_i
     mu_j = ra_j * self._mu[:, j] + c_j
-    x_i = np.linspace(intervals[0][0], intervals[0][1], num_samples)
-    x_j = np.linspace(intervals[1][0], intervals[1][1], num_samples)
+    x_i = np.linspace(subintervals[0][0], subintervals[0][1], num_samples)
+    x_j = np.linspace(subintervals[1][0], subintervals[1][1], num_samples)
     x, y = np.meshgrid(x_i, x_j)
     pos = np.dstack((x, y))
     distr = np.zeros((num_samples, num_samples))
