@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='kesmarag-ml-gmm',
-      version='0.0.3',
+      version='0.0.4',
       description='Gaussian Mixture Model',
       author='Costas Smaragdakis',
       author_email='kesmarag@gmail.com',
