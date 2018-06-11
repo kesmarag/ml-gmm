@@ -17,9 +17,9 @@ class GMM(object):
 
   def fit(self, data, max_steps, tol, use_kmeans=False):
     step = 0
-    post_prev = (tol + 1.0)*data.shape[0]
+    post_prev = (tol + 1.0) * data.shape[0]
     while np.abs(
-      self._post - post_prev)/data.shape[0] > tol and step < max_steps:
+      self._post - post_prev) / data.shape[0] > tol and step < max_steps:
       if step == 0 and use_kmeans:
         kmeans = KMeans(
           n_clusters=self._m, random_state=0).fit(data)
@@ -28,32 +28,31 @@ class GMM(object):
       self._expectation_maximization(data, tol)
       step += 1
     print(self._post)
-      # print('step :', step,  ', abs(diff)/N :',
-      #      np.abs(self._post - post_prev)/data.shape[0])
 
-  def get_marginal(self, i, interval,
+  def get_marginal(self, i, interval, plot_interval,
                    scaling_factor=1, num_samples=1000):
-    ra = (interval[1] - interval[0])/(2.0 * scaling_factor)
-    c = (interval[0] + interval[1])/2.0
+    ra = (interval[1] - interval[0]) / (2.0 * scaling_factor)
+    c = (interval[0] + interval[1]) / 2.0
     mu = ra * self._mu[:, i] + c
     # print(mu)
-    var = self._sigma[:, i, i] * ra**2
+    var = self._sigma[:, i, i] * ra ** 2
     # print(var)
-    x = np.linspace(interval[0], interval[1], num_samples)
+    x = np.linspace(interval[0], plot_interval[1], num_samples)
     distr = np.zeros_like(x)
     for m in range(self._m):
       distr += self._pi[m] * mlab.normpdf(x, mu[m], np.sqrt(var[m]))
     return x, distr
 
-  def get_multivariate(self, i, j, intervals, subintervals, scaling_factor=1, num_samples=100):
-    ra_i = (intervals[0][1] - intervals[0][0])/(2.0 * scaling_factor)
-    ra_j = (intervals[1][1] - intervals[1][0])/(2.0 * scaling_factor)
-    c_i = (intervals[0][0] + intervals[0][1])/2.0
-    c_j = (intervals[1][0] + intervals[1][1])/2.0
+  def get_multivariate(self, i, j, intervals,
+                       plot_intervals, scaling_factor=1, num_samples=100):
+    ra_i = (intervals[0][1] - intervals[0][0]) / (2.0 * scaling_factor)
+    ra_j = (intervals[1][1] - intervals[1][0]) / (2.0 * scaling_factor)
+    c_i = (intervals[0][0] + intervals[0][1]) / 2.0
+    c_j = (intervals[1][0] + intervals[1][1]) / 2.0
     mu_i = ra_i * self._mu[:, i] + c_i
     mu_j = ra_j * self._mu[:, j] + c_j
-    x_i = np.linspace(subintervals[0][0], subintervals[0][1], num_samples)
-    x_j = np.linspace(subintervals[1][0], subintervals[1][1], num_samples)
+    x_i = np.linspace(plot_intervals[0][0], plot_intervals[0][1], num_samples)
+    x_j = np.linspace(plot_intervals[1][0], plot_intervals[1][1], num_samples)
     x, y = np.meshgrid(x_i, x_j)
     pos = np.dstack((x, y))
     distr = np.zeros((num_samples, num_samples))
@@ -70,7 +69,7 @@ class GMM(object):
     frame_len = 35
     s = '#' * frame_len
     s += '\n' + '-' * frame_len + '\n'
-    s += 'kesmarag-toolbox GMM'
+    s += 'kesmarag.ml.gmm.GMM'
     s += '\n' + '-' * frame_len + '\n'
     s += ' - number of mixtures: ' + str(self._m) + '\n'
     s += ' - observation length: ' + str(self._d)
