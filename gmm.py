@@ -37,7 +37,7 @@ class GMM(object):
     # print(mu)
     var = self._sigma[:, i, i] * ra ** 2
     # print(var)
-    x = np.linspace(interval[0], plot_interval[1], num_samples)
+    x = np.linspace(plot_interval[0], plot_interval[1], num_samples)
     distr = np.zeros_like(x)
     for m in range(self._m):
       distr += self._pi[m] * mlab.normpdf(x, mu[m], np.sqrt(var[m]))
