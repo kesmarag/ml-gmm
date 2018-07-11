@@ -58,8 +58,8 @@ class GMM(object):
     distr = np.zeros((num_samples, num_samples))
     for m in range(self._m):
       mu = [mu_i[m], mu_j[m]]
-      cov = [[self._sigma[m, i, i] * ra_i**2, self._sigma[m, i, j] * ra_i * ra_j],
-             [self._sigma[m, i, j] * ra_i * ra_j, self._sigma[m, j, j] * ra_j**2]]
+      cov = np.array([[self._sigma[m, i, i] * ra_i**2, self._sigma[m, i, j] * ra_i * ra_j],
+             [self._sigma[m, i, j] * ra_i * ra_j, self._sigma[m, j, j] * ra_j**2]])
       while not self._is_pos_def(cov):
          cov = cov + 0.05 * np.array(
           [np.identity(2, dtype=np.float64)]) * cov
