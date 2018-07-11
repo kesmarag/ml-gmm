@@ -60,6 +60,9 @@ class GMM(object):
       mu = [mu_i[m], mu_j[m]]
       cov = [[self._sigma[m, i, i] * ra_i**2, self._sigma[m, i, j] * ra_i * ra_j],
              [self._sigma[m, i, j] * ra_i * ra_j, self._sigma[m, j, j] * ra_j**2]]
+      while not self._is_pos_def(cov):
+         cov = cov + 0.05 * np.array(
+          [np.identity(2, dtype=np.float64)]) * cov
       rv = multivariate_normal(mu, cov)
       distr += self._pi[m] * rv.pdf(pos)
     return x, y, distr
