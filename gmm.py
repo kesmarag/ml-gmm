@@ -5,7 +5,15 @@ from sklearn.cluster import KMeans
 
 
 class GMM(object):
+  """A Gaussian Mixture Model class using numpy,scipy,sklearn,matplotlib
+  """
   def __init__(self, num_mixtures, data_dim):
+    """Init method for the GMM class.
+
+    Args:
+    num_mixtures: Number of mixtures
+    data_dim: Dimensionality of the data
+    """
     self._m = num_mixtures
     self._d = data_dim
     self._pi = np.ones((self._m, ), dtype='float64')/self._m
@@ -16,6 +24,15 @@ class GMM(object):
     self._post = 0.0
 
   def fit(self, data, max_steps, tol, use_kmeans=False):
+    """Implements the Expectation-Maximization algorithm.
+
+    Args:
+      data: A numpy array
+      max_steps: Maximum number of steps.
+      tol: The tolerance for teminating the training process.
+      use_kmeans: K-Means initialization (True,False).
+
+    """
     step = 0
     post_prev = (tol + 1.0) * data.shape[0]
     while np.abs(
@@ -27,10 +44,12 @@ class GMM(object):
       post_prev = self._post
       self._expectation_maximization(data, tol)
       step += 1
-    print(self._post)
+    # print(self._post)
 
   def get_marginal(self, i, interval, plot_interval,
                    scaling_factor=1, num_samples=1000):
+    """Returns the i-th posterior marginal probability density function. 
+    """
     ra = (interval[1] - interval[0]) / (2.0 * scaling_factor)
     c = (interval[0] + interval[1]) / 2.0
     mu = ra * self._mu[:, i] + c
@@ -45,6 +64,9 @@ class GMM(object):
 
   def get_multivariate(self, i, j, intervals,
                        plot_intervals, scaling_factor=1, num_samples=100):
+    """Returns the posterior joint probability density function of the 
+    i-th and j-th random variables.
+    """
     ra_i = (intervals[0][1] - intervals[0][0]) / (2.0 * scaling_factor)
     ra_j = (intervals[1][1] - intervals[1][0]) / (2.0 * scaling_factor)
     c_i = (intervals[0][0] + intervals[0][1]) / 2.0
